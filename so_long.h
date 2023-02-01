@@ -6,7 +6,7 @@
 /*   By: lkoletzk <lkoletzk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 14:40:18 by lkoletzk          #+#    #+#             */
-/*   Updated: 2023/01/30 13:47:12 by lkoletzk         ###   ########.fr       */
+/*   Updated: 2023/02/01 15:37:11 by lkoletzk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,20 @@
 # include "minilibx-linux/mlx.h"
 
 # define MLX_ERROR 1
+# define ExitButton 17
+# define KeyPress 2
 
-# define WINDOW_WIDTH 600
-# define WINDOW_HEIGHT 300
+# define SIZE_IMG 64
+
+//# define PLAYER_FRONT "sprites/player/player_front.xpm"
+//# define PLAYER_BACK "sprites/player/player_back.xpm"
+# define PLAYER_RIGHT "sprites/player/p_right.xpm"
+# define PLAYER_LEFT "sprites/player/p_left.xpm"
+# define EXIT_CLOSE "sprites/exit/exit_close.xpm"
+# define EXIT_OPEN "sprites/exit/exit_open.xpm"
+# define PATH "sprites/background/mid1.xpm"
+# define WALL "sprites/background/obst1.xpm"
+# define COLECT "sprites/colectible/colect.xpm"
 
 typedef struct s_point {
 	int	x;
@@ -46,6 +57,19 @@ typedef struct s_img {
 	char	*path;
 }	t_img;
 
+typedef struct s_sprite {
+	// void	*img_player_front;
+	// void	*img_player_back;
+	void	*img_player_right;
+	void	*img_player_left;
+	void	*img_exit_close;
+	void	*img_exit_open;
+	void	*img_path;
+	void	*img_wall;
+	void	*img_colect;
+
+}	t_sprite;
+
 typedef struct s_game {
 	char		**map;
 	// int			moves;
@@ -58,7 +82,7 @@ typedef struct s_game {
 	t_img		simg;
 	int			width;
 	int			height;
-	// t_sprite	xpm;
+	t_sprite	xpm;
 }	t_game;
 
 /* Utils */
@@ -77,8 +101,12 @@ void	flood_fill(t_game *game);
 void	fill(char **map, t_point size, t_point cur, char to_fill);
 
 
-int	mlxpart(t_game *game);
 void	my_mlx_pixel_put(t_game *data, int x, int y, int color);
 int		handle_no_event(void *data);
 int		handle_keypress(int keysym, t_game *data);
+int		close_window(t_game *data);
+
+int		put_images(t_game *data);
+void	load_images(t_game *data);
+
 #endif

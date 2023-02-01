@@ -6,15 +6,15 @@
 /*   By: lkoletzk <lkoletzk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 13:08:30 by lkoletzk          #+#    #+#             */
-/*   Updated: 2023/01/30 14:45:32 by lkoletzk         ###   ########.fr       */
+/*   Updated: 2023/02/01 11:36:44 by lkoletzk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-/* Fonction qui dupliquer la map et trouver le point de depart
+/* Fonction qui duplique la map et trouve le point de depart
 pour ensuite ouvrir le robinet et remplir d'eau chaque chemin possible
-si a la fin il reste un Exit et/ou des collectibles c'est que le chemin
+si a la fin il reste un Exit et/ou des Collectibles c'est que le chemin
 n'est pas faisable */
 
 void	fill(char **map, t_point size, t_point cur, char to_fill)
