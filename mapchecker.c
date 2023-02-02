@@ -6,7 +6,7 @@
 /*   By: lkoletzk <lkoletzk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 14:20:38 by lkoletzk          #+#    #+#             */
-/*   Updated: 2023/02/01 15:08:02 by lkoletzk         ###   ########.fr       */
+/*   Updated: 2023/02/02 16:23:06 by lkoletzk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	check_filename(int argc, char *mapfile, t_game *game)
 }
 
 /* 2. On compte le nombre de lignes pour creer le **tab */
-void	linecount(char *mapfile, t_game *game)
+static void	linecount(char *mapfile, t_game *game)
 {
 	int		x;
 	int		fd;
@@ -82,13 +82,13 @@ void	create_map(char *mapfile, t_game *game)
 	x = 0;
 	linecount(mapfile, game);
 	fd = open(mapfile, O_RDONLY);
-	game->map = calloc(sizeof(char *), (game->height + 1));
+	game->map = ft_calloc(sizeof(char *), (game->height + 1));
 	if (!game->map)
 		return ;
 	line = get_next_line(fd);
 	while (line)
 	{
-		game->map[x] = calloc(sizeof(char), ft_strlen(line));
+		game->map[x] = ft_calloc(sizeof(char), ft_strlen(line));
 		if (!game->map[x])
 			error_message("Wrong malloc, map freed.\n", game);
 		ft_strlcpy(game->map[x], line, ft_strlen(line));
@@ -103,29 +103,29 @@ void	create_map(char *mapfile, t_game *game)
 /* 4. On verifie la composition de la map */
 void	check_map_elements(char **map, t_game *game)
 {
+	int	y;
 	int	x;
-	int	i;
 
-	x = 0;
-	while (map[++x])
+	y = 0;
+	while (map[++y])
 	{
-		i = 0;
-		while (map[x][i] != '\0')
+		x = 0;
+		while (map[y][x] != '\0')
 		{
-			if (map[x][i] == 'C')
+			if (map[y][x] == 'C')
 				game->colectible++;
-			if (map[x][i] == 'E')
+			if (map[y][x] == 'E')
 				game->exit++;
-			if (map[x][i] == 'P')
+			if (map[y][x] == 'P')
 			{
-				game->p.x = i;
-				game->p.y = x;
+				game->p_perso.x = x;
+				game->p_perso.y = y;
 				game->start++;
 			}
-			i++;
+			x++;
 		}
 	}
-	game->width = i;
+	game->width = x;
 	// printf("colectible: %d, start: %d, exit: %d\n", game->colectible, game->start, game->exit);
 }
 

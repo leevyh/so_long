@@ -6,7 +6,7 @@
 /*   By: lkoletzk <lkoletzk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 13:37:19 by lkoletzk          #+#    #+#             */
-/*   Updated: 2023/01/30 13:20:06 by lkoletzk         ###   ########.fr       */
+/*   Updated: 2023/02/02 14:12:37 by lkoletzk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ void	set_on_null(t_game *game)
 	game->start = 0;
 	game->width = 0;
 	game->height = 0;
+	game->moves = 0;
+	game->end_game = 0;
 }
 
 void	error_message(char *str, t_game *game)

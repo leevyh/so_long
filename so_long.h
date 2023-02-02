@@ -6,7 +6,7 @@
 /*   By: lkoletzk <lkoletzk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 14:40:18 by lkoletzk          #+#    #+#             */
-/*   Updated: 2023/02/01 15:37:11 by lkoletzk         ###   ########.fr       */
+/*   Updated: 2023/02/02 16:40:12 by lkoletzk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,22 @@
 # include <X11/keysym.h>
 # include "minilibx-linux/mlx.h"
 
-# define MLX_ERROR 1
-# define ExitButton 17
-# define KeyPress 2
+# define EXIT 17
+# define ESC 65307
+# define W 119
+# define S 115
+# define A 97
+# define D 100
+# define UP 65362
+# define DOWN 65364
+# define LEFT 65361
+# define RIGHT 65363
 
 # define SIZE_IMG 64
 
 //# define PLAYER_FRONT "sprites/player/player_front.xpm"
 //# define PLAYER_BACK "sprites/player/player_back.xpm"
-# define PLAYER_RIGHT "sprites/player/p_right.xpm"
+//# define PLAYER_RIGHT "sprites/player/p_right.xpm"
 # define PLAYER_LEFT "sprites/player/p_left.xpm"
 # define EXIT_CLOSE "sprites/exit/exit_close.xpm"
 # define EXIT_OPEN "sprites/exit/exit_open.xpm"
@@ -52,15 +59,15 @@ typedef struct s_img {
 	void	*addr;
 	int		bits_per_pixel;
 	int		line_length;
-	t_point	size;
 	int		endian;
 	char	*path;
+	t_point	size;
 }	t_img;
 
 typedef struct s_sprite {
 	// void	*img_player_front;
 	// void	*img_player_back;
-	void	*img_player_right;
+	// void	*img_player_right;
 	void	*img_player_left;
 	void	*img_exit_close;
 	void	*img_exit_open;
@@ -72,17 +79,20 @@ typedef struct s_sprite {
 
 typedef struct s_game {
 	char		**map;
-	// int			moves;
+	int			moves;
 	int			colectible;
 	int			start;
 	int			exit;
-	t_point		p;
+	t_point		p_exit;
+	t_point		p_perso;
+	int	end_game;
 	void		*mlx;
 	void		*win;
-	t_img		simg;
+	t_img		img;
 	int			width;
 	int			height;
 	t_sprite	xpm;
+
 }	t_game;
 
 /* Utils */
@@ -91,22 +101,25 @@ void	error_message(char *str, t_game *game);
 
 /* Map checker */
 void	check_filename(int argc, char *mapfile, t_game *game);
-void	linecount(char *mapfile, t_game *game);
 void	create_map(char *mapfile, t_game *game);
 void	check_map_elements(char **map, t_game *game);
 void	check_map_stucture(char **map, t_game *game);
 
 /* Map playable */
 void	flood_fill(t_game *game);
-void	fill(char **map, t_point size, t_point cur, char to_fill);
 
 
-void	my_mlx_pixel_put(t_game *data, int x, int y, int color);
-int		handle_no_event(void *data);
-int		handle_keypress(int keysym, t_game *data);
-int		close_window(t_game *data);
+int		handle_no_event(void *game);
+int		handle_keypress(int keysym, t_game *game);
 
-int		put_images(t_game *data);
-void	load_images(t_game *data);
+
+int		close_window(t_game *game);
+void	free_images(t_game *game);
+void	free_map(t_game *game);
+
+int	key_map(int key, t_game *game);
+
+int		put_images(t_game *game);
+void	load_images(t_game *game);
 
 #endif

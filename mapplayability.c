@@ -6,7 +6,7 @@
 /*   By: lkoletzk <lkoletzk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 13:08:30 by lkoletzk          #+#    #+#             */
-/*   Updated: 2023/02/01 11:36:44 by lkoletzk         ###   ########.fr       */
+/*   Updated: 2023/02/02 16:22:59 by lkoletzk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,28 @@ pour ensuite ouvrir le robinet et remplir d'eau chaque chemin possible
 si a la fin il reste un Exit et/ou des Collectibles c'est que le chemin
 n'est pas faisable */
 
-void	fill(char **map, t_point size, t_point cur, char to_fill)
+static void	mapcpy(t_game *cpy, t_game *game)
+{
+	int	y;
+
+	y = 0;
+	cpy->map = ft_calloc(sizeof(char *), (game->height + 1));
+	if (!cpy->map)
+		return ;
+	while (game->map[y])
+	{
+		cpy->map[y] = ft_calloc(sizeof(char), ft_strlen(game->map[y]));
+		if (!cpy->map[y])
+		{
+			free_map(cpy);
+			error_message("Wrong malloc, map freed.\n", game);
+		}
+		ft_strlcpy(cpy->map[y], game->map[y], ft_strlen(game->map[y]));
+		y++;
+	}
+}
+
+static void	fill(char **map, t_point size, t_point cur, char to_fill)
 {
 	if (cur.y < 0 || cur.y >= size.y || cur.x < 0 || cur.x >= size.x)
 		return ;
@@ -37,22 +58,21 @@ void	flood_fill(t_game *game)
 	t_game	gamecpy;
 	t_point	size;
 	t_point	begin;
-	int		y;
 
-	y = 0;
-	gamecpy = *game;
-	size.x = gamecpy.width;
-	size.y = gamecpy.height;
-	begin.x = gamecpy.p.x;
-	begin.y = gamecpy.p.y;
-	// for (y = 0; y < size.y; ++y)
+	mapcpy(&gamecpy, game);
+	size.x = game->width;
+	size.y = game->height;
+	begin.x = game->p_perso.x;
+	begin.y = game->p_perso.y;
+	// for (int y = 0; y < size.y; ++y)
 	// 	printf("%s\n", gamecpy.map[y]);
 	// printf("\n");
 	fill(gamecpy.map, size, begin, gamecpy.map[begin.y][begin.x]);
-	// for (y = 0; y < size.y; ++y)
+	// for (int y = 0; y < size.y; ++y)
 	// 	printf("%s\n", gamecpy.map[y]);
 	set_on_null(&gamecpy);
 	check_map_elements(gamecpy.map, &gamecpy);
 	if (gamecpy.colectible > 0 || gamecpy.exit > 0 || gamecpy.start > 0)
 		error_message("Map unplayable.\n", game);
+	free_map(&gamecpy);
 }
