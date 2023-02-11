@@ -6,7 +6,7 @@
 /*   By: lkoletzk <lkoletzk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 13:38:04 by lkoletzk          #+#    #+#             */
-/*   Updated: 2023/02/02 16:17:11 by lkoletzk         ###   ########.fr       */
+/*   Updated: 2023/02/07 10:41:46 by lkoletzk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 void	first_part(int argc, char **argv, t_game *game)
 {
+	game->map = 0;
 	set_on_null(game);
 	check_filename(argc, argv[1], game);
 	create_map(argv[1], game);
@@ -27,10 +28,12 @@ void	first_part(int argc, char **argv, t_game *game)
 int	main(int argc, char **argv)
 {
 	t_game	game;
-	
+
 	first_part(argc, argv, &game);
-	
-	
+
+	// if (game.width * SIZE_IMG > 2560 || game.height * SIZE_IMG > 1440)
+	// 	error_message("Map too big.\n", &game);
+
 /* Initialiser la mlx */
 	game.mlx = mlx_init();
 	if (game.mlx == NULL)
@@ -49,19 +52,14 @@ int	main(int argc, char **argv)
 	game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel, &game.img.line_length,
 		&game.img.endian);
 
-// Si la map est trop grande par rapport a l'ecran, message d'erreur
-
 /* Afficher le jeu */
 	load_images(&game);
-	put_images(&game);
-	// mlx_put_image_to_window(game.mlx, game.win, game.simg.img, 0, 0);
+	put_images(&game, RIGHT);				// FACE si autre perso
 
-	//mlx_loop_hook(game.mlx, &handle_no_event, &game);
+//	mlx_string_put(game.mlx, game.win, 1* SIZE_IMG, 1* SIZE_IMG, 0xFF0000, "Moves:");
+
 	mlx_hook(game.win, KeyPress, 1L << 0, &key_map, &game);
 	mlx_hook(game.win, EXIT, 0, &close_window, &game);
-
-	//mlx_hook(data.win, KeyRelease, KeyReleaseMask, &handle_keyrelease, &data);
-
 
 	mlx_loop_hook(game.mlx, put_images, &game);
 	mlx_loop(game.mlx);

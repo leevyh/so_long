@@ -6,7 +6,7 @@
 /*   By: lkoletzk <lkoletzk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 13:43:58 by lkoletzk          #+#    #+#             */
-/*   Updated: 2023/02/02 16:39:44 by lkoletzk         ###   ########.fr       */
+/*   Updated: 2023/02/07 10:28:23 by lkoletzk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	key_map(int key, t_game *game)
 		close_window(game);
 	else if (key == A || key == LEFT)
 		col--;
-	else if (key == W|| key == UP)
+	else if (key == W || key == UP)
 		line--;
 	else if (key == S || key == DOWN)
 		line++;
@@ -49,7 +49,7 @@ static void	move_player(t_game *game, int col, int line, int key)
 		game->map[line][col] = 'P';
 		game->p_perso.y = line;
 		game->p_perso.x = col;
-		put_images(game);
+		put_images(game, key);
 		printf("moves: %d\n", game->moves);
 		if (validate == 2)
 			close_window(game);
@@ -58,27 +58,21 @@ static void	move_player(t_game *game, int col, int line, int key)
 
 static int	move_checker(t_game *game, int col, int line, int key)
 {
-	if (game->map[line][col] == '1') // WALL = ne peux pas bouger
+	if (game->map[line][col] == '1')
 		return (-1);
-
-	if (game->map[line][col] == 'C') // COLECT = On le recupere
+	if (game->map[line][col] == 'C')
 		game->colectible--;
-
-
-	if (game->map[line][col] == 'E' && game->colectible > 0) // EXIT = On ne peut pas sortir, il reste des collectibles
+	if (game->map[line][col] == 'E' && game->colectible > 0)
 		return (-1);
-
-	if (game->map[line][col] == 'E' && game->colectible == 0) // EXIT = On est sur la sortie
+	if (game->map[line][col] == 'E' && game->colectible == 0)
 	{
 		game->map[game->p_perso.y][game->p_perso.x] = '0';
 		game->end_game = 1;
 		return (2);
 	}
-
 	if (key == A || key == W || key == S || key == D || key == UP
 		|| key == DOWN || key == LEFT || key == RIGHT)
 		return (1);
-	
 	else
 		return (-1);
 }

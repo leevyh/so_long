@@ -6,7 +6,7 @@
 /*   By: lkoletzk <lkoletzk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 14:40:18 by lkoletzk          #+#    #+#             */
-/*   Updated: 2023/02/02 16:40:12 by lkoletzk         ###   ########.fr       */
+/*   Updated: 2023/02/07 10:30:30 by lkoletzk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
+# include <errno.h>
 
 # include <X11/X.h>
 # include <X11/keysym.h>
@@ -39,9 +40,7 @@
 
 # define SIZE_IMG 64
 
-//# define PLAYER_FRONT "sprites/player/player_front.xpm"
-//# define PLAYER_BACK "sprites/player/player_back.xpm"
-//# define PLAYER_RIGHT "sprites/player/p_right.xpm"
+# define PLAYER_RIGHT "sprites/player/p_right.xpm"
 # define PLAYER_LEFT "sprites/player/p_left.xpm"
 # define EXIT_CLOSE "sprites/exit/exit_close.xpm"
 # define EXIT_OPEN "sprites/exit/exit_open.xpm"
@@ -65,16 +64,13 @@ typedef struct s_img {
 }	t_img;
 
 typedef struct s_sprite {
-	// void	*img_player_front;
-	// void	*img_player_back;
-	// void	*img_player_right;
+	void	*img_player_right;
 	void	*img_player_left;
 	void	*img_exit_close;
 	void	*img_exit_open;
 	void	*img_path;
 	void	*img_wall;
 	void	*img_colect;
-
 }	t_sprite;
 
 typedef struct s_game {
@@ -85,7 +81,7 @@ typedef struct s_game {
 	int			exit;
 	t_point		p_exit;
 	t_point		p_perso;
-	int	end_game;
+	int			end_game;
 	void		*mlx;
 	void		*win;
 	t_img		img;
@@ -99,27 +95,22 @@ typedef struct s_game {
 void	set_on_null(t_game *game);
 void	error_message(char *str, t_game *game);
 
+int		close_window(t_game *game);
+void	free_map(t_game *game);
+
 /* Map checker */
 void	check_filename(int argc, char *mapfile, t_game *game);
 void	create_map(char *mapfile, t_game *game);
 void	check_map_elements(char **map, t_game *game);
 void	check_map_stucture(char **map, t_game *game);
 
-/* Map playable */
+/* Map playability */
 void	flood_fill(t_game *game);
 
-
-int		handle_no_event(void *game);
-int		handle_keypress(int keysym, t_game *game);
-
-
-int		close_window(t_game *game);
-void	free_images(t_game *game);
-void	free_map(t_game *game);
-
+/* Player's moves */
 int	key_map(int key, t_game *game);
 
-int		put_images(t_game *game);
+int		put_images(t_game *game, int key);
 void	load_images(t_game *game);
 
 #endif

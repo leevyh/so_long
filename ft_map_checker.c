@@ -6,7 +6,7 @@
 /*   By: lkoletzk <lkoletzk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 14:20:38 by lkoletzk          #+#    #+#             */
-/*   Updated: 2023/02/02 16:23:06 by lkoletzk         ###   ########.fr       */
+/*   Updated: 2023/02/07 10:39:24 by lkoletzk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@ It has to be constructed with 3 components:
 	-> walls, collectibles, and free space.
 
 The map can be composed of only these 5 characters:
-0 for an empty space,
-1 for a wall,
-C for a collectible,
-E for a map exit,
-P for the player’s starting position
+	0 for an empty space,
+	1 for a wall,
+	C for a collectible,
+	E for a map exit,
+	P for the player’s starting position
 
 The map MUST:
 • contain at least 1 exit, 1 collectible, and 1 starting position.
@@ -38,14 +38,20 @@ void	check_filename(int argc, char *mapfile, t_game *game)
 	int	fd;
 
 	if (argc != 2)
-		error_message("Not the good amount of arguments.\n", game);
+		error_message("Error: Not the good amount of arguments.\n", game);
 	if (ft_strncmp(".ber", &mapfile[ft_strlen(mapfile) - 4], ft_strlen(mapfile))
 		!= 0 || ft_strlen(mapfile) <= 4 || (ft_strnstr(mapfile, "/.ber",
-				ft_strlen(mapfile)) != NULL))
-		error_message("Wrong map name.\n", game);
+				ft_strlen(mapfile)) != 0))
+	{
+		ft_printf("Error: %s\n", strerror(EBADF));
+		exit (EXIT_FAILURE);
+	}
 	fd = open(mapfile, O_RDONLY);
 	if (fd < 0)
-		error_message("Wrong file.\n", game);
+	{
+		ft_printf("Error: %s\n", strerror(ENOENT));
+		exit (EXIT_FAILURE);
+	}
 	close (fd);
 }
 
@@ -69,7 +75,7 @@ static void	linecount(char *mapfile, t_game *game)
 	}
 	close(fd);
 	if (game->height <= 0)
-		error_message("Empty map.\n", game);
+		error_message("Error: Empty map.\n", game);
 }
 
 /* 3. On cree la map */
@@ -90,7 +96,7 @@ void	create_map(char *mapfile, t_game *game)
 	{
 		game->map[x] = ft_calloc(sizeof(char), ft_strlen(line));
 		if (!game->map[x])
-			error_message("Wrong malloc, map freed.\n", game);
+			error_message("Error: Wrong malloc, map freed.\n", game);
 		ft_strlcpy(game->map[x], line, ft_strlen(line));
 		// printf("%s\n", game->map[x]);
 		free(line);
@@ -110,7 +116,7 @@ void	check_map_elements(char **map, t_game *game)
 	while (map[++y])
 	{
 		x = 0;
-		while (map[y][x] != '\0')
+		while (map[y][++x])
 		{
 			if (map[y][x] == 'C')
 				game->colectible++;
@@ -122,7 +128,6 @@ void	check_map_elements(char **map, t_game *game)
 				game->p_perso.y = y;
 				game->start++;
 			}
-			x++;
 		}
 	}
 	game->width = x;
@@ -134,19 +139,18 @@ void	check_map_stucture(char **map, t_game *game)
 {
 	int	x;
 	int	i;
-	int	len;
 
 	x = 0;
 	check_map_elements(map, game);
 	if (game->colectible <= 0 || game->exit != 1 || game->start != 1)
-		error_message("Not the good amount of elements.\n", game);
+		error_message("Error: Not the good amount of elements.\n", game);
 	while (map[x])
 	{
 		i = 0;
-		if (ft_strlen(map[x]) != game->width)
-			error_message("Map isn't rectangle.\n", game);
+		if ((int)ft_strlen(map[x]) != game->width)
+			error_message("Error: Map isn't rectangle.\n", game);
 		if (map[x][0] != '1' || map[x][game->width - 1] != '1')
-			error_message("Map not surrounded by walls.\n", game);
+			error_message("Error: Map not surrounded by walls.\n", game);
 		x++;
 	}
 	i = 0;
@@ -154,5 +158,5 @@ void	check_map_stucture(char **map, t_game *game)
 		&& map[game->height - 1][i] == '1')
 		i++;
 	if (map[0][i] != '\0' || map[game->height - 1][i] != '\0')
-		error_message("Map not surrounded by walls.\n", game);
+		error_message("Error: Map not surrounded by walls.\n", game);
 }

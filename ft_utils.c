@@ -6,7 +6,7 @@
 /*   By: lkoletzk <lkoletzk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 13:37:19 by lkoletzk          #+#    #+#             */
-/*   Updated: 2023/02/02 14:12:37 by lkoletzk         ###   ########.fr       */
+/*   Updated: 2023/02/06 15:40:39 by lkoletzk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,6 @@ void	error_message(char *str, t_game *game)
 		free(game->map[x]);
 		free(game->map);
 	}
-	ft_printf("Error: %s", str);
+	ft_printf("%s", str);
 	exit(EXIT_FAILURE);
 }

@@ -6,17 +6,15 @@
 /*   By: lkoletzk <lkoletzk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 13:08:30 by lkoletzk          #+#    #+#             */
-/*   Updated: 2023/02/02 16:22:59 by lkoletzk         ###   ########.fr       */
+/*   Updated: 2023/02/06 17:23:43 by lkoletzk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-/* Fonction qui duplique la map et trouve le point de depart
-pour ensuite ouvrir le robinet et remplir d'eau chaque chemin possible
-si a la fin il reste un Exit et/ou des Collectibles c'est que le chemin
-n'est pas faisable */
+static void	fill(char **map, t_point size, t_point cur, char to_fill);
 
+/* 6.1. On copie la map */
 static void	mapcpy(t_game *cpy, t_game *game)
 {
 	int	y;
@@ -27,32 +25,21 @@ static void	mapcpy(t_game *cpy, t_game *game)
 		return ;
 	while (game->map[y])
 	{
-		cpy->map[y] = ft_calloc(sizeof(char), ft_strlen(game->map[y]));
+		cpy->map[y] = ft_strdup(game->map[y]);
 		if (!cpy->map[y])
 		{
 			free_map(cpy);
-			error_message("Wrong malloc, map freed.\n", game);
+			error_message("Error: Wrong malloc, map freed.\n", game);
 		}
-		ft_strlcpy(cpy->map[y], game->map[y], ft_strlen(game->map[y]));
 		y++;
 	}
 }
 
-static void	fill(char **map, t_point size, t_point cur, char to_fill)
-{
-	if (cur.y < 0 || cur.y >= size.y || cur.x < 0 || cur.x >= size.x)
-		return ;
-	if (map[cur.y][cur.x] == '0' || map[cur.y][cur.x] == 'P'
-		|| map[cur.y][cur.x] == 'E' || map[cur.y][cur.x] == 'C')
-	{
-		map[cur.y][cur.x] = 'W';
-		fill(map, size, (t_point){cur.x - 1, cur.y}, to_fill);
-		fill(map, size, (t_point){cur.x + 1, cur.y}, to_fill);
-		fill(map, size, (t_point){cur.x, cur.y - 1}, to_fill);
-		fill(map, size, (t_point){cur.x, cur.y + 1}, to_fill);
-	}
-}
 
+/* 6.2. On se positionne sur la case depart et remplit
+les cases d'eau (fonction fill) si apres avoir rempli
+toutes les cases accessibles il reste la sortie et/ou
+un collectible c'est que la map est impossible a terminer. */
 void	flood_fill(t_game *game)
 {
 	t_game	gamecpy;
@@ -73,6 +60,24 @@ void	flood_fill(t_game *game)
 	set_on_null(&gamecpy);
 	check_map_elements(gamecpy.map, &gamecpy);
 	if (gamecpy.colectible > 0 || gamecpy.exit > 0 || gamecpy.start > 0)
-		error_message("Map unplayable.\n", game);
+	{
+		free_map(&gamecpy);
+		error_message("Error: Map unplayable.\n", game);
+	}
 	free_map(&gamecpy);
+}
+
+static void	fill(char **map, t_point size, t_point cur, char to_fill)
+{
+	if (cur.y < 0 || cur.y >= size.y || cur.x < 0 || cur.x >= size.x)
+		return ;
+	if (map[cur.y][cur.x] == '0' || map[cur.y][cur.x] == 'P'
+		|| map[cur.y][cur.x] == 'E' || map[cur.y][cur.x] == 'C')
+	{
+		map[cur.y][cur.x] = 'W';
+		fill(map, size, (t_point){cur.x - 1, cur.y}, to_fill);
+		fill(map, size, (t_point){cur.x + 1, cur.y}, to_fill);
+		fill(map, size, (t_point){cur.x, cur.y - 1}, to_fill);
+		fill(map, size, (t_point){cur.x, cur.y + 1}, to_fill);
+	}
 }
