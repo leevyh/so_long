@@ -6,7 +6,7 @@
 /*   By: lkoletzk <lkoletzk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 14:40:18 by lkoletzk          #+#    #+#             */
-/*   Updated: 2023/02/07 10:30:30 by lkoletzk         ###   ########.fr       */
+/*   Updated: 2023/02/14 15:12:40 by lkoletzk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 
 # include <X11/X.h>
 # include <X11/keysym.h>
-# include "minilibx-linux/mlx.h"
+# include "../minilibx-linux/mlx.h"
 
 # define EXIT 17
 # define ESC 65307
@@ -92,11 +92,10 @@ typedef struct s_game {
 }	t_game;
 
 /* Utils */
+void	free_map(t_game *game);
+int		close_window(t_game *game, int key);
 void	set_on_null(t_game *game);
 void	error_message(char *str, t_game *game);
-
-int		close_window(t_game *game);
-void	free_map(t_game *game);
 
 /* Map checker */
 void	check_filename(int argc, char *mapfile, t_game *game);
@@ -104,12 +103,13 @@ void	create_map(char *mapfile, t_game *game);
 void	check_map_elements(char **map, t_game *game);
 void	check_map_stucture(char **map, t_game *game);
 
-/* Map playability */
+/* Map solvability */
 void	flood_fill(t_game *game);
 
 /* Player's moves */
-int	key_map(int key, t_game *game);
+int		key_map(int key, t_game *game);
 
+/* Graphismes */
 int		put_images(t_game *game, int key);
 void	load_images(t_game *game);
 

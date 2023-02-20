@@ -1,36 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mapchecker.c                                       :+:      :+:    :+:   */
+/*   ft_map_checker.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lkoletzk <lkoletzk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 14:20:38 by lkoletzk          #+#    #+#             */
-/*   Updated: 2023/02/07 10:39:24 by lkoletzk         ###   ########.fr       */
+/*   Updated: 2023/02/20 12:13:37 by lkoletzk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/*
-A map is: a description file ending with the .ber
-It has to be constructed with 3 components:
-	-> walls, collectibles, and free space.
-
-The map can be composed of only these 5 characters:
-	0 for an empty space,
-	1 for a wall,
-	C for a collectible,
-	E for a map exit,
-	P for the player’s starting position
-
-The map MUST:
-• contain at least 1 exit, 1 collectible, and 1 starting position.
-• be rectangular.
-• be closed/surrounded by walls.
-
-	Any misconfiguration: return("Error: explicit error message\n");
-*/
-
-#include "so_long.h"
+#include "../so_long.h"
 
 /* 1. On check le nb d'arguments, le nom de la map, le fichier map */
 void	check_filename(int argc, char *mapfile, t_game *game)
@@ -98,7 +78,6 @@ void	create_map(char *mapfile, t_game *game)
 		if (!game->map[x])
 			error_message("Error: Wrong malloc, map freed.\n", game);
 		ft_strlcpy(game->map[x], line, ft_strlen(line));
-		// printf("%s\n", game->map[x]);
 		free(line);
 		line = get_next_line(fd);
 		x++;
@@ -112,10 +91,10 @@ void	check_map_elements(char **map, t_game *game)
 	int	y;
 	int	x;
 
-	y = 0;
+	y = -1;
 	while (map[++y])
 	{
-		x = 0;
+		x = -1;
 		while (map[y][++x])
 		{
 			if (map[y][x] == 'C')
@@ -131,7 +110,6 @@ void	check_map_elements(char **map, t_game *game)
 		}
 	}
 	game->width = x;
-	// printf("colectible: %d, start: %d, exit: %d\n", game->colectible, game->start, game->exit);
 }
 
 /* 5. On verifie les murs et le rectangle */
@@ -140,18 +118,17 @@ void	check_map_stucture(char **map, t_game *game)
 	int	x;
 	int	i;
 
-	x = 0;
+	x = -1;
 	check_map_elements(map, game);
 	if (game->colectible <= 0 || game->exit != 1 || game->start != 1)
 		error_message("Error: Not the good amount of elements.\n", game);
-	while (map[x])
+	while (map[++x])
 	{
 		i = 0;
 		if ((int)ft_strlen(map[x]) != game->width)
 			error_message("Error: Map isn't rectangle.\n", game);
 		if (map[x][0] != '1' || map[x][game->width - 1] != '1')
 			error_message("Error: Map not surrounded by walls.\n", game);
-		x++;
 	}
 	i = 0;
 	while (map[0][i] && map[game->height - 1][i] && map[0][i] == '1'

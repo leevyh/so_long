@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sprites.c                                          :+:      :+:    :+:   */
+/*   ft_sprites.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lkoletzk <lkoletzk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 13:50:33 by lkoletzk          #+#    #+#             */
-/*   Updated: 2023/02/10 10:25:10 by lkoletzk         ###   ########.fr       */
+/*   Updated: 2023/02/14 15:11:52 by lkoletzk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../so_long.h"
 
 static void	put_map(t_game *game, int line, int col);
 static void	put_player(t_game *game, int line, int col, int key);
@@ -38,20 +38,18 @@ int	put_images(t_game *game, int key)
 	int	line;
 	int	col;
 
-	line = 0;
-	while (game->map[line])
+	line = -1;
+	while (game->map[++line])
 	{
-		col = 0;
-		while (game->map[line][col])
+		col = -1;
+		while (game->map[line][++col])
 		{
 			if (game->map[line][col] == '1' || game->map[line][col] == '0'
 				|| game->map[line][col] == 'C' || game->map[line][col] == 'E')
 				put_map(game, line, col);
 			if (game->map[line][col] == 'P')
 				put_player(game, line, col, key);
-			col++;
 		}
-		line++;
 	}
 	return (1);
 }

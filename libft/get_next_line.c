@@ -6,7 +6,7 @@
 /*   By: lkoletzk <lkoletzk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 13:55:24 by lkoletzk          #+#    #+#             */
-/*   Updated: 2023/01/24 14:43:51 by lkoletzk         ###   ########.fr       */
+/*   Updated: 2023/02/20 12:12:42 by lkoletzk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,30 +145,5 @@ int	main(void)
 	free(line);
 	printf("ligne %i : |%s|\n", i++, line = get_next_line(fd));
 	free(line);
-	printf("ligne %i : |%s|\n", i++, line = get_next_line(fd));
-	free(line);
-	printf("ligne %i : |%s|\n", i++, line = get_next_line(fd));
-	free(line);
-	printf("ligne %i : |%s|\n", i++, line = get_next_line(fd));
-	free(line);
-	printf("ligne %i : |%s|\n", i++, line = get_next_line(fd));
-	free(line);
-	printf("ligne %i : |%s|\n", i++, line = get_next_line(fd));
-	free(line);
-	printf("ligne %i : |%s|\n", i++, line = get_next_line(fd));
-	free(line);
-	printf("ligne %i : |%s|\n", i++, line = get_next_line(fd));
-	free(line);
-	printf("ligne %i : |%s|\n", i++, line = get_next_line(fd));
-	free(line);
-	printf("ligne %i : |%s|\n", i++, line = get_next_line(fd));
-	free(line);
-	printf("ligne %i : |%s|\n", i++, line = get_next_line(fd));
-	free(line);
-	printf("ligne %i : |%s|\n", i++, line = get_next_line(fd));
-	free(line);
-	printf("ligne %i : |%s|\n", i++, line = get_next_line(fd));
-	free(line);
-
 	close(fd);
 }*/

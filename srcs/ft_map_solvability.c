@@ -1,29 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mapplayability.c                                   :+:      :+:    :+:   */
+/*   ft_map_solvability.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lkoletzk <lkoletzk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 13:08:30 by lkoletzk          #+#    #+#             */
-/*   Updated: 2023/02/06 17:23:43 by lkoletzk         ###   ########.fr       */
+/*   Updated: 2023/02/14 13:52:44 by lkoletzk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
-
-static void	fill(char **map, t_point size, t_point cur, char to_fill);
+#include "../so_long.h"
 
 /* 6.1. On copie la map */
 static void	mapcpy(t_game *cpy, t_game *game)
 {
 	int	y;
 
-	y = 0;
+	y = -1;
 	cpy->map = ft_calloc(sizeof(char *), (game->height + 1));
 	if (!cpy->map)
 		return ;
-	while (game->map[y])
+	while (game->map[++y])
 	{
 		cpy->map[y] = ft_strdup(game->map[y]);
 		if (!cpy->map[y])
@@ -31,10 +29,23 @@ static void	mapcpy(t_game *cpy, t_game *game)
 			free_map(cpy);
 			error_message("Error: Wrong malloc, map freed.\n", game);
 		}
-		y++;
 	}
 }
 
+static void	fill(char **map, t_point size, t_point cur, char to_fill)
+{
+	if (cur.y < 0 || cur.y >= size.y || cur.x < 0 || cur.x >= size.x)
+		return ;
+	if (map[cur.y][cur.x] == '0' || map[cur.y][cur.x] == 'P'
+		|| map[cur.y][cur.x] == 'E' || map[cur.y][cur.x] == 'C')
+	{
+		map[cur.y][cur.x] = 'W';
+		fill(map, size, (t_point){cur.x - 1, cur.y}, to_fill);
+		fill(map, size, (t_point){cur.x + 1, cur.y}, to_fill);
+		fill(map, size, (t_point){cur.x, cur.y - 1}, to_fill);
+		fill(map, size, (t_point){cur.x, cur.y + 1}, to_fill);
+	}
+}
 
 /* 6.2. On se positionne sur la case depart et remplit
 les cases d'eau (fonction fill) si apres avoir rempli
@@ -51,33 +62,13 @@ void	flood_fill(t_game *game)
 	size.y = game->height;
 	begin.x = game->p_perso.x;
 	begin.y = game->p_perso.y;
-	// for (int y = 0; y < size.y; ++y)
-	// 	printf("%s\n", gamecpy.map[y]);
-	// printf("\n");
 	fill(gamecpy.map, size, begin, gamecpy.map[begin.y][begin.x]);
-	// for (int y = 0; y < size.y; ++y)
-	// 	printf("%s\n", gamecpy.map[y]);
 	set_on_null(&gamecpy);
 	check_map_elements(gamecpy.map, &gamecpy);
 	if (gamecpy.colectible > 0 || gamecpy.exit > 0 || gamecpy.start > 0)
 	{
 		free_map(&gamecpy);
-		error_message("Error: Map unplayable.\n", game);
+		error_message("Error: Map unsolvable.\n", game);
 	}
 	free_map(&gamecpy);
-}
-
-static void	fill(char **map, t_point size, t_point cur, char to_fill)
-{
-	if (cur.y < 0 || cur.y >= size.y || cur.x < 0 || cur.x >= size.x)
-		return ;
-	if (map[cur.y][cur.x] == '0' || map[cur.y][cur.x] == 'P'
-		|| map[cur.y][cur.x] == 'E' || map[cur.y][cur.x] == 'C')
-	{
-		map[cur.y][cur.x] = 'W';
-		fill(map, size, (t_point){cur.x - 1, cur.y}, to_fill);
-		fill(map, size, (t_point){cur.x + 1, cur.y}, to_fill);
-		fill(map, size, (t_point){cur.x, cur.y - 1}, to_fill);
-		fill(map, size, (t_point){cur.x, cur.y + 1}, to_fill);
-	}
 }
