@@ -36,8 +36,10 @@ static void	fill(char **map, t_point size, t_point cur, char to_fill)
 {
 	if (cur.y < 0 || cur.y >= size.y || cur.x < 0 || cur.x >= size.x)
 		return ;
+	if (map[cur.y][cur.x] == 'E')
+		map[cur.y][cur.x] = 'S';
 	if (map[cur.y][cur.x] == '0' || map[cur.y][cur.x] == 'P'
-		|| map[cur.y][cur.x] == 'E' || map[cur.y][cur.x] == 'C')
+		|| map[cur.y][cur.x] == 'C')
 	{
 		map[cur.y][cur.x] = 'W';
 		fill(map, size, (t_point){cur.x - 1, cur.y}, to_fill);
